@@ -116,3 +116,31 @@ vercel
 
 - Max dosya boyutu: 5MB
 - Desteklenen formatlar: .srt, .vtt
+
+## Docker ve Local Domain ile Çalıştırma
+
+Projeyi Docker ile izole bir şekilde çalıştırabilir ve `aiceviri-api.local` alan adını kullanarak test edebilirsiniz.
+
+1. `.env` dosyanızı oluşturun:
+```bash
+cp .env.example .env
+```
+Gerekli API anahtarlarını içine ekleyin. `CORS_ORIGINS` değişkenini ekleyerek dış kaynaklardan gelen isteklere izin verebilirsiniz:
+```env
+CORS_ORIGINS=http://localhost:3000,https://aiceviri-api.local
+```
+
+2. Bilgisayarınızın `hosts` dosyasına domaini ekleyin:
+   - **Linux/Mac**: `/etc/hosts` dosyasını `sudo nano /etc/hosts` ile açın.
+   - **Windows**: `C:\Windows\System32\drivers\etc\hosts` dosyasını yönetici olarak açın.
+   Şu satırı ekleyin:
+   ```text
+   127.0.0.1 aiceviri-api.local
+   ```
+
+3. Docker Compose ile başlatın:
+```bash
+docker-compose up -d
+```
+
+Artık API'niz `https://aiceviri-api.local/api/translate` adresinden yayın yapıyor olacaktır. Caddy, yerel geliştirme için kendi SSL sertifikasını (tls internal) otomatik olarak oluşturacaktır. Tarayıcınız güvenlik uyarısı verirse gelişmiş sekmesinden devam edebilirsiniz.
