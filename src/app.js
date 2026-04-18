@@ -7,11 +7,7 @@ import translationRoutes from './routes/translationRoutes.js';
 const app = express();
 
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://aiceviri.ewgsta.me',
-    'https://translation-api.vercel.app'
-  ],
+  origin: config.corsOrigins,
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'x-api-key']
 };
@@ -33,8 +29,8 @@ export function start() {
     process.exit(1);
   }
 
-  app.listen(config.port, () => {
-    console.log(`translation-api: http://localhost:${config.port}`);
+  app.listen(config.port, '0.0.0.0', () => {
+    console.log(`translation-api: http://0.0.0.0:${config.port}`);
   });
 }
 

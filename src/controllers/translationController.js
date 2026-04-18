@@ -26,7 +26,9 @@ export async function handleTranslation(req, res) {
 
   const translatedContent = await translateSubtitle(fileContent, fileExtension, req.openRouterApiKey);
 
+  const encodedFilename = encodeURIComponent(req.file.originalname);
+
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="${req.file.originalname}"`);
+  res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`);
   res.send(translatedContent);
 }
