@@ -1,0 +1,4 @@
+aiceviri-api.local {
+    reverse_proxy api:3000
+    tls internal
+}

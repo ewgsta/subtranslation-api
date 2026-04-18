@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: aiceviri_api
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: aiceviri_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  caddy_data:
+  caddy_config:
