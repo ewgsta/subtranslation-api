@@ -1,14 +1,14 @@
-# AI Çeviri API
+# AI Translation API
 
-SRT ve VTT altyazı dosyalarını Türkçeye çeviren API.
+SRT and VTT subtitle files translator to Turkish.
 
-## Kurulum
+## Installation
 
 ```bash
 npm install
 ```
 
-`.env` dosyası oluştur:
+Create a `.env` file:
 
 ```env
 OPENROUTER_API_KEY=your_openrouter_key
@@ -16,13 +16,13 @@ API_KEY=your_secret_key
 PORT=3000
 ```
 
-## Çalıştırma
+## Running
 
 ```bash
 npm start
 ```
 
-## API Kullanımı
+## API Usage
 
 ### Endpoint
 
@@ -32,18 +32,18 @@ POST /api/translate
 
 ### Headers
 
-| Header | Zorunlu | Açıklama |
-|--------|---------|----------|
-| x-api-key | Evet | .env'deki API_KEY değeri |
-| Content-Type | Evet | multipart/form-data |
+| Header | Required | Description |
+|--------|----------|-------------|
+| x-api-key | Yes | API_KEY value from .env |
+| Content-Type | Yes | multipart/form-data |
 
 ### Body
 
-| Alan | Tip | Açıklama |
-|------|-----|----------|
-| file | File | .srt veya .vtt dosyası |
+| Field | Type | Description |
+|-------|------|-------------|
+| file | File | .srt or .vtt file |
 
-### Örnek İstek (cURL)
+### Example Request (cURL)
 
 ```bash
 curl -X POST http://localhost:3000/api/translate \
@@ -51,12 +51,11 @@ curl -X POST http://localhost:3000/api/translate \
   -F "file=@subtitle.vtt"
 ```
 
-### Örnek İstek (JavaScript)
+### Example Request (JavaScript)
 
 ```javascript
 const formData = new FormData();
 formData.append('file', file);
-
 const response = await fetch('http://localhost:3000/api/translate', {
   method: 'POST',
   headers: {
@@ -64,45 +63,44 @@ const response = await fetch('http://localhost:3000/api/translate', {
   },
   body: formData
 });
-
 const blob = await response.blob();
 ```
 
-### Başarılı Yanıt
+### Successful Response
 
 - Status: 200
 - Content-Type: text/plain
 - Content-Disposition: attachment; filename="original_filename.vtt"
-- Body: Çevrilmiş altyazı içeriği
+- Body: Translated subtitle content
 
-### Hata Yanıtları
+### Error Responses
 
 ```json
 {
   "error": {
     "code": 1001,
-    "message": "Dosya yüklenmedi"
+    "message": "File not uploaded"
   }
 }
 ```
 
-| Kod | Açıklama |
-|-----|----------|
-| 1001 | Dosya yüklenmedi |
-| 1002 | Desteklenmeyen format |
-| 1003 | Dosya okunamadı |
-| 1004 | Dosya boyutu çok büyük (max 5MB) |
-| 2001 | API key eksik |
-| 2002 | API key geçersiz |
-| 3001 | OpenRouter API hatası |
-| 3002 | Model yanıt vermedi |
-| 3004 | Rate limit aşıldı |
+| Code | Description |
+|------|-------------|
+| 1001 | File not uploaded |
+| 1002 | Unsupported format |
+| 1003 | File could not be read |
+| 1004 | File size too large (max 5MB) |
+| 2001 | API key missing |
+| 2002 | API key invalid |
+| 3001 | OpenRouter API error |
+| 3002 | Model did not respond |
+| 3004 | Rate limit exceeded |
 
-## Vercel'e Deploy
+## Deploy to Vercel
 
-1. GitHub'a push et
-2. Vercel'de import et
-3. Environment variables ekle:
+1. Push to GitHub
+2. Import on Vercel
+3. Add environment variables:
    - `OPENROUTER_API_KEY`
    - `API_KEY`
 4. Deploy
@@ -112,35 +110,41 @@ npm i -g vercel
 vercel
 ```
 
-## Limitler
+## Limits
 
-- Max dosya boyutu: 5MB
-- Desteklenen formatlar: .srt, .vtt
+- Max file size: 5MB
+- Supported formats: .srt, .vtt
 
-## Docker ve Local Domain ile Çalıştırma
+## Running with Docker and Local Domain
 
-Projeyi Docker ile izole bir şekilde çalıştırabilir ve `aiceviri-api.local` alan adını kullanarak test edebilirsiniz.
+You can run the project in an isolated manner with Docker and test it using the `aiceviri-api.local` domain name.
 
-1. `.env` dosyanızı oluşturun:
+1. Create your `.env` file:
+
 ```bash
 cp .env.example .env
 ```
-Gerekli API anahtarlarını içine ekleyin. `CORS_ORIGINS` değişkenini ekleyerek dış kaynaklardan gelen isteklere izin verebilirsiniz:
+
+Add the required API keys. You can allow requests from external sources by adding the `CORS_ORIGINS` variable:
+
 ```env
 CORS_ORIGINS=http://localhost:3000,https://aiceviri-api.local
 ```
 
-2. Bilgisayarınızın `hosts` dosyasına domaini ekleyin:
-   - **Linux/Mac**: `/etc/hosts` dosyasını `sudo nano /etc/hosts` ile açın.
-   - **Windows**: `C:\Windows\System32\drivers\etc\hosts` dosyasını yönetici olarak açın.
-   Şu satırı ekleyin:
+2. Add the domain to your computer's `hosts` file:
+   - **Linux/Mac**: Open `/etc/hosts` with `sudo nano /etc/hosts`.
+   - **Windows**: Open `C:\Windows\System32\drivers\etc\hosts` as administrator.
+
+   Add this line:
+
    ```text
    127.0.0.1 aiceviri-api.local
    ```
 
-3. Docker Compose ile başlatın:
+3. Start with Docker Compose:
+
 ```bash
 docker-compose up -d
 ```
 
-Artık API'niz `https://aiceviri-api.local/api/translate` adresinden yayın yapıyor olacaktır. Caddy, yerel geliştirme için kendi SSL sertifikasını (tls internal) otomatik olarak oluşturacaktır. Tarayıcınız güvenlik uyarısı verirse gelişmiş sekmesinden devam edebilirsiniz.
+Your API will now be available at `https://aiceviri-api.local/api/translate`. Caddy will automatically create its own SSL certificate (tls internal) for local development. If your browser shows a security warning, you can proceed from the advanced tab.
